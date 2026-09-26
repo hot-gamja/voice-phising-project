@@ -1,0 +1,21 @@
+# Python
+__pycache__/
+*.pyc
+.venv/
+
+# Data — KorCCVi 재배포 금지
+data/
+
+# Model artifacts
+models/
+
+# Experiment outputs (결과 csv/json은 필요 시 선택적으로 추가)
+experiments/runs/
+
+# Notebooks
+.ipynb_checkpoints/
+
+# OS / IDE
+.DS_Store
+.idea/
+.vscode/
