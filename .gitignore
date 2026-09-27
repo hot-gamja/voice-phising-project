@@ -4,13 +4,13 @@ __pycache__/
 .venv/
 
 # Data — KorCCVi 재배포 금지
-data/
+/data/
 
 # Model artifacts
-models/
+/models/
 
 # Experiment outputs (결과 csv/json은 필요 시 선택적으로 추가)
-experiments/runs/
+/experiments/runs/
 
 # Notebooks
 .ipynb_checkpoints/
