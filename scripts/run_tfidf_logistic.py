@@ -16,7 +16,7 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.pipeline import make_pipeline
 
 from src.data.model_text import load_model_text_split
-from src.evaluation.threshold import TARGET_RECALL, metrics_at, pr_table, select_threshold
+from src.evaluation.threshold import TARGET_RECALL, metrics_at, observed_score_thresholds, pr_table, select_threshold
 
 C_CANDIDATES = [0.01, 0.1, 1, 10]
 MIN_DF = 2  # n-grams seen in only one training call are noise
@@ -47,19 +47,19 @@ def main() -> None:
     lines = ["# B0 TF-IDF(char_wb 2-3) + Logistic — Train → Validation", "",
              f"- min_df={MIN_DF}, sublinear_tf, C ∈ {C_CANDIDATES}. Selection: precision at recall ≥ {TARGET_RECALL} (§15), tie → F1",
              "", "## C sweep on model_text (Head+Tail)", "",
-             "| C | vocab | thr | precision@R≥0.90 | recall | F1@thr | F1@0.5 |", "|---:|---:|---:|---:|---:|---:|---:|"]
+             "| C | vocab | thr (exact) | precision@R≥0.90 | recall | F1@thr | F1@0.5 |", "|---:|---:|---:|---:|---:|---:|---:|"]
     runs = {}
     for c_value in C_CANDIDATES:
         pipeline, scores = fit_and_score(train_rows, val_rows, "model_text", c_value)
-        point = select_threshold(val_y, scores)
+        point = select_threshold(val_y, scores, candidates=observed_score_thresholds(scores))
         vocab_size = len(pipeline.named_steps["tfidfvectorizer"].vocabulary_)
         runs[c_value] = (pipeline, scores, point)
-        lines.append(f"| {c_value} | {vocab_size} | {point.threshold:.2f} | {point.precision:.3f} | {point.recall:.3f} "
+        lines.append(f"| {c_value} | {vocab_size} | {point.threshold:.4f} | {point.precision:.3f} | {point.recall:.3f} "
                      f"| {point.f1:.3f} | {metrics_at(val_y, scores, 0.5).f1:.3f} |")
 
     best_c = max(runs, key=lambda c: (runs[c][2].precision, runs[c][2].f1))
     best_pipeline, best_scores, best_point = runs[best_c]
-    lines += ["", f"**Selected C = {best_c}**, decision_threshold = {best_point.threshold:.2f}, "
+    lines += ["", f"**Selected C = {best_c}**, decision_threshold = {best_point.threshold:.4f}, "
               f"precision {best_point.precision:.3f} / recall {best_point.recall:.3f} / F1 {best_point.f1:.3f}", ""]
 
     lines += ["## PR trade-off (selected C, Validation)", "", "| threshold | precision | recall | F1 |", "|---:|---:|---:|---:|"]
@@ -67,7 +67,7 @@ def main() -> None:
         lines.append(f"| {point.threshold:.2f} | {point.precision:.3f} | {point.recall:.3f} | {point.f1:.3f} |")
 
     _, full_scores = fit_and_score(train_rows, val_rows, "text", best_c)
-    full_point = select_threshold(val_y, full_scores)
+    full_point = select_threshold(val_y, full_scores, candidates=observed_score_thresholds(full_scores))
     lines += ["", "## Reference only: tfidf_fulltext (full transcript, same C)", "",
               f"precision {full_point.precision:.3f} / recall {full_point.recall:.3f} / F1 {full_point.f1:.3f} at thr {full_point.threshold:.2f}. "
               "Not used for model selection (plan §9)."]
