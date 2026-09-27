@@ -25,3 +25,7 @@ torch = [{ index = "pytorch-cpu", marker = "sys_platform == 'linux'" }]
 dev = [
     "pytest~=9.1.0",
 ]
+
+[tool.pytest.ini_options]
+pythonpath = ["."]
+testpaths = ["tests"]
