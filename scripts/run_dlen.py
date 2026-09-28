@@ -10,6 +10,8 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
+import joblib
+
 from sklearn.linear_model import LogisticRegression
 from sklearn.pipeline import make_pipeline
 from sklearn.preprocessing import StandardScaler
@@ -19,6 +21,7 @@ from src.features.length_features import FEATURE_NAMES, length_features_for_spli
 
 RESULTS_PATH = Path("experiments/dlen_val_results.md")
 SCORES_PATH = Path("experiments/dlen_val_scores.json")
+MODEL_PATH = Path("models/dlen.joblib")
 
 
 def main() -> None:
@@ -50,6 +53,8 @@ def main() -> None:
     SCORES_PATH.write_text(json.dumps(
         {"model": "dlen", "split": "val", "decision_threshold": chosen_point.threshold,
          "scores": dict(zip(val_ids, val_scores))}, ensure_ascii=False, indent=1), encoding="utf-8")
+    MODEL_PATH.parent.mkdir(exist_ok=True)
+    joblib.dump({"pipeline": model, "decision_threshold": chosen_point.threshold}, MODEL_PATH)
     print("\n".join(lines))
 
 
