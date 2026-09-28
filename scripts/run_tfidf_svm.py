@@ -16,7 +16,7 @@ from sklearn.pipeline import make_pipeline
 from sklearn.svm import LinearSVC
 
 from src.data.model_text import load_model_text_split
-from src.evaluation.threshold import TARGET_RECALL, observed_score_thresholds, pr_table, quantile_thresholds, select_threshold
+from src.evaluation.threshold import TARGET_RECALL, candidate_thresholds, pr_table, quantile_thresholds, select_threshold
 
 C_CANDIDATES = [0.01, 0.1, 1, 10]
 MIN_DF = 2
@@ -48,7 +48,7 @@ def main() -> None:
         pipeline.fit([row["model_text"] for row in train_rows], [row["label"] for row in train_rows])
         scores = pipeline.decision_function([row["model_text"] for row in val_rows]).tolist()
         candidates = quantile_thresholds(scores)
-        point = select_threshold(val_y, scores, candidates=observed_score_thresholds(scores))
+        point = select_threshold(val_y, scores, candidates=candidate_thresholds(scores, score_kind="margin"))
         zero_point = pr_table(val_y, scores, [0.0])[0]
         runs[c_value] = (pipeline, scores, point, candidates)
         lines.append(f"| {c_value} | {min(scores):+.2f} … {max(scores):+.2f} | {point.threshold:+.3f} | {point.precision:.3f} "

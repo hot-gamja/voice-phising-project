@@ -16,7 +16,7 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.pipeline import make_pipeline
 
 from src.data.model_text import load_model_text_split
-from src.evaluation.threshold import TARGET_RECALL, metrics_at, observed_score_thresholds, pr_table, select_threshold
+from src.evaluation.threshold import TARGET_RECALL, candidate_thresholds, metrics_at, pr_table, select_threshold
 
 C_CANDIDATES = [0.01, 0.1, 1, 10]
 MIN_DF = 2  # n-grams seen in only one training call are noise
@@ -51,7 +51,7 @@ def main() -> None:
     runs = {}
     for c_value in C_CANDIDATES:
         pipeline, scores = fit_and_score(train_rows, val_rows, "model_text", c_value)
-        point = select_threshold(val_y, scores, candidates=observed_score_thresholds(scores))
+        point = select_threshold(val_y, scores, candidates=candidate_thresholds(scores))
         vocab_size = len(pipeline.named_steps["tfidfvectorizer"].vocabulary_)
         runs[c_value] = (pipeline, scores, point)
         lines.append(f"| {c_value} | {vocab_size} | {point.threshold:.4f} | {point.precision:.3f} | {point.recall:.3f} "
@@ -67,7 +67,7 @@ def main() -> None:
         lines.append(f"| {point.threshold:.2f} | {point.precision:.3f} | {point.recall:.3f} | {point.f1:.3f} |")
 
     _, full_scores = fit_and_score(train_rows, val_rows, "text", best_c)
-    full_point = select_threshold(val_y, full_scores, candidates=observed_score_thresholds(full_scores))
+    full_point = select_threshold(val_y, full_scores, candidates=candidate_thresholds(full_scores))
     lines += ["", "## Reference only: tfidf_fulltext (full transcript, same C)", "",
               f"precision {full_point.precision:.3f} / recall {full_point.recall:.3f} / F1 {full_point.f1:.3f} at thr {full_point.threshold:.2f}. "
               "Not used for model selection (plan §9)."]

@@ -2,7 +2,7 @@
  "model": "tfidf_logistic",
  "split": "val",
  "C": 1,
- "decision_threshold": 0.418000005311405,
+ "decision_threshold": 0.4125425335474416,
  "scores": {
   "d02j09s007919": 0.1427432679577487,
   "d03j15s000972": 0.10125812033749038,

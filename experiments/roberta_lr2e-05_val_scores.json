@@ -2,7 +2,7 @@
  "model": "roberta_lr2e-05",
  "split": "val",
  "lr": 2e-05,
- "decision_threshold": 0.006903837900608778,
+ "decision_threshold": 0.5002577358391136,
  "scores": {
   "d02j09s007919": 0.0009547316585667431,
   "d03j15s000972": 0.0008830458391457796,

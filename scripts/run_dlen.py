@@ -14,7 +14,7 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.pipeline import make_pipeline
 from sklearn.preprocessing import StandardScaler
 
-from src.evaluation.threshold import TARGET_RECALL, metrics_at, pr_table, select_threshold
+from src.evaluation.threshold import TARGET_RECALL, candidate_thresholds, metrics_at, pr_table, select_threshold
 from src.features.length_features import FEATURE_NAMES, length_features_for_split
 
 RESULTS_PATH = Path("experiments/dlen_val_results.md")
@@ -30,7 +30,7 @@ def main() -> None:
     val_scores = model.predict_proba(val_x)[:, 1].tolist()
 
     default_point = metrics_at(val_y, val_scores, 0.5)
-    chosen_point = select_threshold(val_y, val_scores)
+    chosen_point = select_threshold(val_y, val_scores, candidates=candidate_thresholds(val_scores))
     coefficients = model.named_steps["logisticregression"].coef_[0]
 
     lines = ["# D-LEN (length-only) — Train → Validation", "",

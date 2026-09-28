@@ -1,7 +1,7 @@
 {
  "model": "dlen",
  "split": "val",
- "decision_threshold": 0.25,
+ "decision_threshold": 0.25289282496371945,
  "scores": {
   "d02j09s007919": 0.30725186379510544,
   "d03j15s000972": 0.24969521351875434,

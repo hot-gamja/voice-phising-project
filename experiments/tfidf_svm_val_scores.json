@@ -2,7 +2,7 @@
  "model": "tfidf_svm",
  "split": "val",
  "C": 0.1,
- "decision_threshold": -0.12582611476386343,
+ "decision_threshold": -0.13960499013494426,
  "score_kind": "margin",
  "scores": {
   "d02j09s007919": -0.6765674697365175,

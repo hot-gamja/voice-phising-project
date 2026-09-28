@@ -25,7 +25,7 @@ from transformers import (
 )
 
 from src.data.model_text import TOKENIZER_NAME, load_model_text_split
-from src.evaluation.threshold import TARGET_RECALL, metrics_at, observed_score_thresholds, select_threshold
+from src.evaluation.threshold import TARGET_RECALL, candidate_thresholds, metrics_at, select_threshold
 
 os.environ.setdefault("PYTORCH_ENABLE_MPS_FALLBACK", "1")
 MAX_LENGTH = 512
@@ -53,7 +53,7 @@ def vishing_scores(logits: np.ndarray) -> list[float]:
 def make_compute_metrics(labels: list[int]):
     def compute_metrics(eval_prediction):
         scores = vishing_scores(eval_prediction.predictions)
-        point = select_threshold(labels, scores, candidates=observed_score_thresholds(scores))
+        point = select_threshold(labels, scores, candidates=candidate_thresholds(scores))
         default = metrics_at(labels, scores, 0.5)
         return {
             "precision_at_r90": point.precision, "recall_at_r90": point.recall,
@@ -118,7 +118,7 @@ def main() -> None:
 
     prediction = trainer.predict(val_dataset)
     scores = vishing_scores(prediction.predictions)
-    point = select_threshold(val_labels, scores, candidates=observed_score_thresholds(scores))
+    point = select_threshold(val_labels, scores, candidates=candidate_thresholds(scores))
     default = metrics_at(val_labels, scores, 0.5)
     lines = [f"# RoBERTa (klue/roberta-base) LR={args.lr:g}, epochs={args.epochs:g}, batch={args.batch_size}x{args.grad_accum} — Train → Validation", "",
              f"- sec/step {sec_per_step:.2f}, total {elapsed / 60:.0f} min", "",

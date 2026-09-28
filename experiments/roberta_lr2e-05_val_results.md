@@ -5,7 +5,7 @@
 | point | threshold | precision | recall | F1 |
 |---|---:|---:|---:|---:|
 | default 0.5 | 0.5000 | 1.000 | 0.986 | 0.993 |
-| Recall ≥ 0.9 (§11) | 0.0069 | 1.000 | 1.000 | 1.000 |
+| Recall ≥ 0.9 (§11, candidates in [0.05, 0.95]) | 0.5003 | 1.000 | 0.986 | 0.993 |
 
 ## Per-epoch eval log
 

@@ -39,12 +39,44 @@ def quantile_thresholds(scores: list[float], steps: int = 19) -> list[float]:
 
 
 def observed_score_thresholds(scores: list[float]) -> list[float]:
-    """Every distinct Validation score as a candidate: no grid loss.
+    """Midpoints between consecutive distinct Validation scores: no grid loss.
 
-    Any threshold between two observed scores gives the same predictions as the
-    higher one, so this set covers all reachable operating points.
+    Every reachable operating point is covered, and placing each candidate in
+    the middle of the gap (not on an observed score) leaves equal margin on
+    both sides, so a small score shift at Test time does not flip a call.
     """
-    return sorted(set(float(score) for score in scores))
+    distinct = sorted(set(float(score) for score in scores))
+    return [(low + high) / 2 for low, high in zip(distinct, distinct[1:])]
+
+
+def restrict_candidates(candidates: list[float], lower: float, upper: float, fallback: float) -> list[float]:
+    """Keep candidates inside [lower, upper]; if none remain, use the fallback alone.
+
+    Used to refuse extreme thresholds (e.g. 0.007) that only exist to catch one
+    outlier and would be unusable in serving.
+    """
+    inside = [candidate for candidate in candidates if lower <= candidate <= upper]
+    return inside if inside else [fallback]
+
+
+PROBABILITY_RANGE = (0.05, 0.95, 0.5)  # lower, upper, fallback for 0..1 scores
+MARGIN_QUANTILES = (0.05, 0.95, 0.0)   # quantile bounds and fallback for SVM margins
+
+
+def candidate_thresholds(scores: list[float], score_kind: str = "probability") -> list[float]:
+    """V1 policy (plan §11): gap midpoints, restricted away from the extremes.
+
+    score_kind "probability" keeps candidates in [0.05, 0.95] (fallback 0.5);
+    "margin" keeps them between the 5th and 95th percentile of the scores
+    (fallback 0.0).
+    """
+    midpoints = observed_score_thresholds(scores)
+    if score_kind == "margin":
+        lower_q, upper_q, fallback = MARGIN_QUANTILES
+        lower, upper = float(np.quantile(scores, lower_q)), float(np.quantile(scores, upper_q))
+    else:
+        lower, upper, fallback = PROBABILITY_RANGE
+    return restrict_candidates(midpoints, lower, upper, fallback)
 
 
 def pr_table(labels: list[int], scores: list[float], candidates: list[float] | None = None) -> list[OperatingPoint]:
@@ -63,6 +95,8 @@ def select_threshold(
 
     Falls back to the lowest candidate threshold if no candidate reaches the target.
     """
+    if candidates is not None and not candidates:
+        raise ValueError("select_threshold needs at least one candidate threshold")
     table = pr_table(labels, scores, candidates)
     eligible = [point for point in table if point.recall >= target_recall]
     if not eligible:

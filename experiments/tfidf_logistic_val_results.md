@@ -6,12 +6,12 @@
 
 | C | vocab | thr (exact) | precision@R≥0.90 | recall | F1@thr | F1@0.5 |
 |---:|---:|---:|---:|---:|---:|---:|
-| 0.01 | 30684 | 0.4941 | 1.000 | 0.971 | 0.986 | 0.947 |
-| 0.1 | 30684 | 0.4721 | 1.000 | 0.986 | 0.993 | 0.971 |
-| 1 | 30684 | 0.4180 | 1.000 | 1.000 | 1.000 | 0.971 |
-| 10 | 30684 | 0.3834 | 1.000 | 1.000 | 1.000 | 0.993 |
+| 0.01 | 30684 | 0.4940 | 1.000 | 0.971 | 0.986 | 0.947 |
+| 0.1 | 30684 | 0.4713 | 1.000 | 0.986 | 0.993 | 0.971 |
+| 1 | 30684 | 0.4125 | 1.000 | 1.000 | 1.000 | 0.971 |
+| 10 | 30684 | 0.3324 | 1.000 | 1.000 | 1.000 | 0.993 |
 
-**Selected C = 1**, decision_threshold = 0.4180, precision 1.000 / recall 1.000 / F1 1.000
+**Selected C = 1**, decision_threshold = 0.4125, precision 1.000 / recall 1.000 / F1 1.000
 
 ## PR trade-off (selected C, Validation)
 
@@ -39,4 +39,4 @@
 
 ## Reference only: tfidf_fulltext (full transcript, same C)
 
-precision 1.000 / recall 0.986 / F1 0.993 at thr 0.45. Not used for model selection (plan §9).
+precision 1.000 / recall 0.986 / F1 0.993 at thr 0.43. Not used for model selection (plan §9).
