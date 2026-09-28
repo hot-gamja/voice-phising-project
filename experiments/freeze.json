@@ -1,0 +1,36 @@
+{
+ "frozen_at": "2026-09-28T01:45:37+00:00",
+ "git_commit": "d9b81b4",
+ "working_tree_clean": true,
+ "final_model": "tfidf_logistic",
+ "models": {
+  "dlen": {
+   "path": "models/dlen.joblib",
+   "sha256_16": "13466a8a11efefba",
+   "decision_threshold": 0.25289282496371945
+  },
+  "tfidf_logistic": {
+   "path": "models/tfidf_logistic.joblib",
+   "sha256_16": "78237d6181c9b81b",
+   "decision_threshold": 0.4125425335474416
+  },
+  "tfidf_svm": {
+   "path": "models/tfidf_svm.joblib",
+   "sha256_16": "07b7d88fbc19814c",
+   "decision_threshold": -0.13960499013494426
+  },
+  "roberta": {
+   "path": "models/roberta_lr2e-05",
+   "sha256_16": "3c397928f8d00e5f",
+   "decision_threshold": 0.5002577358391136
+  }
+ },
+ "code": {
+  "src/data/preprocess.py": "c4b0e0d98536a970",
+  "src/data/truncate.py": "4e68463e6cedec79",
+  "src/data/model_text.py": "972fdf59e96770f5",
+  "src/features/length_features.py": "701f703c4150d681",
+  "src/evaluation/threshold.py": "7ce5cc9c996515de"
+ },
+ "rule": "Nothing above changes after this point. Test is evaluated once per model (plan §8-A, §12)."
+}
