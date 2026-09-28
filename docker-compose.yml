@@ -1,0 +1,10 @@
+services:
+  api:
+    build: .
+    image: voice-phishing-detection:v1
+    ports:
+      - "8000:8000"
+    environment:
+      MODEL_PATH: /app/models/tfidf_logistic.joblib
+      TOKENIZER_PATH: /app/models/tokenizer_klue_roberta_base
+    restart: unless-stopped

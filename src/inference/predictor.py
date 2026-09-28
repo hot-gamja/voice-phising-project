@@ -7,6 +7,7 @@ any calibration; it is not a real-world probability.
 
 from __future__ import annotations
 
+import os
 from dataclasses import dataclass
 from pathlib import Path
 
@@ -19,6 +20,8 @@ from src.data.truncate import truncate_head_tail
 
 MODEL_VERSION = "v1"
 DEFAULT_MODEL_PATH = Path("models/tfidf_logistic.joblib")
+# A local tokenizer directory (baked into the Docker image) avoids a network fetch at startup.
+DEFAULT_TOKENIZER = os.environ.get("TOKENIZER_PATH", TOKENIZER_NAME)
 LABEL_PHISHING = "PHISHING"
 LABEL_NORMAL = "NORMAL"
 
@@ -34,7 +37,7 @@ class Prediction:
 class Predictor:
     """Loads the frozen pipeline once; `predict` is synchronous and thread-safe for reads."""
 
-    def __init__(self, model_path: Path = DEFAULT_MODEL_PATH, tokenizer_name: str = TOKENIZER_NAME):
+    def __init__(self, model_path: Path = DEFAULT_MODEL_PATH, tokenizer_name: str = DEFAULT_TOKENIZER):
         artifact = joblib.load(model_path)
         self.pipeline = artifact["pipeline"]
         self.decision_threshold = float(artifact["decision_threshold"])

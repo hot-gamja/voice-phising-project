@@ -1097,8 +1097,6 @@ name = "voice-phishing-detection"
 version = "0.1.0"
 source = { virtual = "." }
 dependencies = [
-    { name = "accelerate" },
-    { name = "datasets" },
     { name = "fastapi" },
     { name = "pydantic" },
     { name = "scikit-learn" },
@@ -1106,19 +1104,21 @@ dependencies = [
     { name = "torch", version = "2.14.0+cpu", source = { registry = "https://download.pytorch.org/whl/cpu" }, marker = "sys_platform == 'linux'" },
     { name = "transformers" },
     { name = "uvicorn" },
+    { name = "websockets" },
 ]
 
 [package.dev-dependencies]
 dev = [
     { name = "httpx" },
     { name = "pytest" },
-    { name = "websockets" },
+]
+train = [
+    { name = "accelerate" },
+    { name = "datasets" },
 ]
 
 [package.metadata]
 requires-dist = [
-    { name = "accelerate", specifier = "~=1.15.0" },
-    { name = "datasets", specifier = "~=5.0.0" },
     { name = "fastapi", specifier = "~=0.141.0" },
     { name = "pydantic", specifier = "~=2.13.0" },
     { name = "scikit-learn", specifier = "~=1.9.0" },
@@ -1126,13 +1126,17 @@ requires-dist = [
     { name = "torch", marker = "sys_platform == 'linux'", specifier = "~=2.14.0", index = "https://download.pytorch.org/whl/cpu" },
     { name = "transformers", specifier = "~=5.17.0" },
     { name = "uvicorn", specifier = "~=0.53.0" },
+    { name = "websockets", specifier = ">=17.1" },
 ]
 
 [package.metadata.requires-dev]
 dev = [
     { name = "httpx", specifier = ">=0.28.1" },
     { name = "pytest", specifier = "~=9.1.0" },
-    { name = "websockets", specifier = ">=17.1" },
+]
+train = [
+    { name = "accelerate", specifier = "~=1.15.0" },
+    { name = "datasets", specifier = "~=5.0.0" },
 ]
 
 [[package]]

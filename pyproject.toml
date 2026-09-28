@@ -3,14 +3,13 @@ name = "voice-phishing-detection"
 version = "0.1.0"
 requires-python = ">=3.12,<3.13"
 dependencies = [
-    "accelerate~=1.15.0",
-    "datasets~=5.0.0",
     "fastapi~=0.141.0",
     "pydantic~=2.13.0",
     "scikit-learn~=1.9.0",
     "torch~=2.14.0",
     "transformers~=5.17.0",
     "uvicorn~=0.53.0",
+    "websockets>=17.1",
 ]
 
 [[tool.uv.index]]
@@ -22,11 +21,18 @@ explicit = true
 torch = [{ index = "pytorch-cpu", marker = "sys_platform == 'linux'" }]
 
 [dependency-groups]
+# train: needed only for scripts/ and src/training/, not for the serving image
+train = [
+    "accelerate~=1.15.0",
+    "datasets~=5.0.0",
+]
 dev = [
     "httpx>=0.28.1",
     "pytest~=9.1.0",
-    "websockets>=17.1",
 ]
+
+[tool.uv]
+default-groups = ["dev", "train"]
 
 [tool.pytest.ini_options]
 pythonpath = ["."]

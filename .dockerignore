@@ -1,0 +1,13 @@
+.git
+.venv
+data/
+experiments/*.log
+experiments/*_train.log
+models/roberta_*
+models/tfidf_svm.joblib
+models/dlen.joblib
+notebooks/
+tests/
+docs/
+**/__pycache__
+.pytest_cache
