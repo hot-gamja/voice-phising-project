@@ -20,3 +20,4 @@ __pycache__/
 .idea/
 .vscode/
 experiments/*_train.log
+experiments/uvicorn_dev.log

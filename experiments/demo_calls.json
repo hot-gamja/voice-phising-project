@@ -1,0 +1,20 @@
+{
+ "note": "Validation calls only (plan §19). Test calls are never used for demo.",
+ "calls": [
+  {
+   "call_id": "vishing_341",
+   "label": 1,
+   "why": "경매 컨설팅 알바 사기형. 2번째 segment부터 끝까지 PHISHING 유지 (0.61~0.69)"
+  },
+  {
+   "call_id": "vishing_318",
+   "label": 1,
+   "why": "대포통장 아르바이트 권유. Validation에서 가장 애매했던 피싱. 스트리밍 중 threshold(0.413) 근처를 오가다 마지막에 0.418 PHISHING"
+  },
+  {
+   "call_id": "d02j12s000729",
+   "label": 0,
+   "why": "보건소 혈액검사 상담(정상). Validation 정상 중 최고 점수. 중간 segment에서는 PHISHING으로 흔들리다 전체 문맥에서 0.407 NORMAL — prefix 점수 신뢰도 한계(§20)의 실례"
+  }
+ ]
+}
