@@ -143,6 +143,12 @@ curl -X POST http://127.0.0.1:8000/predict -H 'content-type: application/json' \
 
 - `model_score`는 보정되지 않은 모델 출력값입니다. **현실 세계의 피싱 확률이 아닙니다.** 그래서 `decision_threshold`를 응답에 같이 실어 "왜 이 점수에서 PHISHING인지"를 클라이언트가 알 수 있게 했습니다.
 - 모델은 앱 시작 시 `lifespan`에서 한 번 로드하고, 추론은 `run_in_threadpool`에서 돌아 다른 요청을 막지 않습니다.
+- 실제 HTTP로 계약을 확인하는 [hurl](https://hurl.dev) 파일이 `~/workspace/work/hurl/voice-phishing/`에 있습니다(프로젝트 밖, 개인 hurl 트리). 서버를 띄운 뒤:
+
+```bash
+cd ~/workspace/work/hurl/voice-phishing
+hurl --variables-file local.env --test health.hurl predict.hurl
+```
 
 ### 4. WebSocket 데모 (Mock Transcript Stream)
 
