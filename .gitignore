@@ -6,6 +6,9 @@ __pycache__/
 # Data — KorCCVi 재배포 금지
 /data/
 
+# Personal study notes — kept local only, not for the public repo
+/docs/
+
 # Model artifacts
 /models/
 
