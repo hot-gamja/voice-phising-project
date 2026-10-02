@@ -75,7 +75,7 @@ flowchart LR
 | TF-IDF SVM | −0.140 | 1.000 | 1.000 | 1.000 | 0 | 0 | 1.000 – 1.000 |
 | RoBERTa 2e-5 | 0.500 | 0.972 | 0.986 | 0.979 | 2 | 1 | 0.953 – 1.000 |
 
-- Freeze 기록: [experiments/freeze.json](experiments/freeze.json) (모델·코드 해시, git 커밋 `d9b81b4`). 평가 스크립트는 Freeze 파일이 없거나 Test 점수 파일이 이미 있으면 실행을 거부합니다.
+- Freeze 기록: [experiments/freeze.json](experiments/freeze.json) (모델·코드 해시). freeze.json에 적힌 커밋 `d9b81b4`는 이 저장소에 없는 객체이고 실제 freeze 커밋은 `ad1b77b`입니다 — 정정 근거는 [experiments/freeze_provenance.md](experiments/freeze_provenance.md). 평가 스크립트는 Freeze 파일이 없거나 Test 점수 파일이 이미 있으면 실행을 거부합니다.
 - Test에서 TF-IDF Logistic의 정상 최고 점수 0.371, 피싱 최저 점수 0.618로 간격 0.247입니다(Validation에서는 0.011).
 - 오류 0건의 신뢰구간이 1.000–1.000인 것은 "오류율 0"이 아니라 "142건에서 관측되지 않음"입니다. 실제 오류율이 2%라도 142건에서 0건이 나올 확률은 약 6%입니다.
 
