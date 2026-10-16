@@ -1,30 +1,54 @@
-# 코딩 가이드라인 — voice-phising-project
+# voice-phising-project
 
-전역 `~/.claude/CLAUDE.md`를 그대로 따르되, 아래 항목만 이 프로젝트에서 다르게 적용한다.
+전역 `~/.claude/CLAUDE.md`를 따른다. 아래는 이 프로젝트에서만 다르게 적용하는 것.
 
-## 주석과 커밋 메시지 언어 — 한국어
+## 1. 주석·커밋 메시지는 한국어
 
-코드 주석, 독스트링, 커밋 메시지는 **한국어**로 작성한다. 전역 규칙("코드 주석은 항상 영어")을 이 프로젝트에서만 덮어쓴다.
+전역 규칙("코드 주석은 항상 영어")을 이 프로젝트에서만 덮어쓴다. 이 리포는 학습 자료를 겸하고, 코드와 히스토리의 주 독자가 작성자 자신이다.
 
-이 프로젝트는 학습 자료를 겸하므로 코드와 히스토리의 주 독자가 작성자 자신이다. 다시 읽을 수 없는 기록은 남겨도 쓸모가 없다.
+| 대상 | 언어 |
+|---|---|
+| 코드 주석, 독스트링 | **한국어** |
+| 커밋 메시지 제목 본문·본문 단락 | **한국어** |
+| 커밋 제목 `type:` 접두어 (`feat`/`fix`/`docs`/`chore`) | 영어 — 도구가 파싱하는 토큰 |
+| 식별자, 문자열 리터럴, 로그·에러 메시지 | 영어 |
 
-- 바뀌는 것은 설명문뿐이다. 식별자, 문자열 리터럴, 로그·에러 메시지는 영어를 유지한다.
-- 커밋 제목의 `type:` 접두어(`feat`/`docs`/`fix`/`chore`)는 영어로 둔다. 사람이 읽는 설명이 아니라 분류용 토큰이다. 제목 본문과 본문 단락만 한국어로 쓴다 — 예: `feat: 출처 컬럼을 담은 V2 표준 행 추가`.
-- 전역 규칙의 커밋 메시지 형식은 그대로다 — 괄호 스코프 없음, 작성자 트레일러 없음, 제목 + 선택적 본문에서 끝낸다.
-- 이미 영어로 쓰인 과거 커밋은 다시 쓰지 않는다. `v1.0-final` 태그와 푸시된 히스토리를 고치는 비용이 일관성보다 크다.
-- 정형화된 doc 주석 스타일은 유지한다 — Python 독스트링 형식 그대로 두고 내용만 한국어로 쓴다.
-- 간결하게 쓰는 규칙은 그대로다. 코드를 다시 설명하지 말고, 그 단위가 무엇을 왜 하는지만 적는다.
+문자열처럼 생겼지만 **런타임에 사용자에게 나가는 것은 번역하지 않는다**: pydantic `Field(description=...)`(OpenAPI 스키마), argparse `help=`, pytest `skipif(reason=)`, 보고서 스크립트가 f-string으로 만드는 마크다운.
 
-### 예외: freeze된 파일 5개는 영어 주석을 유지한다
+커밋 메시지 형식은 전역 규칙 그대로 — 괄호 스코프 없음, 작성자 트레일러 없음. 이미 영어로 쓰인 과거 커밋은 다시 쓰지 않는다.
 
-`experiments/freeze.json`의 `code` 목록에 있는 파일은 **주석도 바꾸지 않는다.**
+## 2. freeze된 파일 5개는 수정 금지
 
-- `src/data/preprocess.py`
-- `src/data/truncate.py`
-- `src/data/model_text.py`
-- `src/features/length_features.py`
-- `src/evaluation/threshold.py`
+`experiments/freeze.json`의 `code` 목록:
 
-주석 한 글자만 바꿔도 sha256이 달라져 `scripts/verify_freeze.py`가 실패하고, "V1을 수정하지 않았다"는 V2의 전제가 깨진다. 이 파일을 고쳐야 할 이유가 생기면 번역이 아니라 freeze 정책부터 다시 논의한다.
+```
+src/data/preprocess.py
+src/data/truncate.py
+src/data/model_text.py
+src/features/length_features.py
+src/evaluation/threshold.py
+```
 
-이 파일들에 기능을 덧붙일 때는 수정하지 말고 **새 모듈에서 import해 재사용**한다. `src/data/canonical.py`(`preprocess.py` 재사용)와 `src/evaluation/metrics.py`(`threshold.py` 옆에 신설)가 그 예다.
+**주석 한 글자도 바꾸지 않는다.** 바꾸면 sha256이 달라져 `scripts/verify_freeze.py`가 실패하고, "V1을 수정하지 않았다"는 V2의 전제가 깨진다.
+
+기능을 덧붙일 때는 **수정하지 말고 새 모듈에서 import한다.** 선례:
+
+| 새 모듈 | 재사용 대상 |
+|---|---|
+| `src/data/canonical.py` | `preprocess.call_text_from_transcript` |
+| `src/evaluation/metrics.py` | `threshold.py` 옆에 신설 |
+
+## 3. 작업 전후 확인
+
+```bash
+uv run python -m scripts.verify_freeze   # 9/9 match, exit 0
+uv run pytest -q                         # 26 passed
+```
+
+V1 artifact(`models/`)는 gitignore라 덮어써도 git이 감지하지 못하고 복구 경로도 없다. 학습 스크립트를 재실행하기 전에 출력 경로를 먼저 확인한다.
+
+## 4. 현재 단계 — V2 일반화 검증
+
+V2는 기능 추가가 아니라 **V1의 Test F1 1.000이 쉬운 단서(출처·대본) 때문이 아닌지 검증**하는 단계다. 진행 상황은 `git log --oneline v1.0-final..HEAD`.
+
+계획서는 `docs/`에 있고 `docs/`는 gitignore다 — 로컬에만 존재한다.
