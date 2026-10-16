@@ -1,8 +1,8 @@
-"""P03 D-LEN: length-only Logistic Regression, Train -> Validation only.
+"""P03 D-LEN: 길이 전용 Logistic 회귀, Train → Validation만.
 
-Run:  uv run python -m scripts.run_dlen
-Test is NOT touched here (plan §8-B); it is evaluated once at P09.
-Writes experiments/dlen_val_results.md and experiments/dlen_val_scores.json.
+실행: uv run python -m scripts.run_dlen
+여기서는 Test를 건드리지 않는다(계획서 §8-B); P09에서 한 번만 평가한다.
+experiments/dlen_val_results.md와 experiments/dlen_val_scores.json을 쓴다.
 """
 
 from __future__ import annotations

@@ -1,4 +1,4 @@
-"""Plan §24 Model Inference Test on the frozen TF-IDF Logistic artifact."""
+"""계획서 §24 freeze된 TF-IDF Logistic artifact에 대한 모델 추론 테스트."""
 
 import pytest
 

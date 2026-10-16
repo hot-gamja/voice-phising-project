@@ -1,6 +1,6 @@
-"""P02: build data/processed/{train,val,test}.jsonl from the raw transcripts.
+"""P02: 원본 전사본으로부터 data/processed/{train,val,test}.jsonl을 생성한다.
 
-Run:  uv run python -m scripts.build_processed
+실행:  uv run python -m scripts.build_processed
 """
 
 from __future__ import annotations

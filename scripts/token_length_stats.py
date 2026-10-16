@@ -1,7 +1,7 @@
-"""P01: token length of every call under the klue/roberta-base tokenizer.
+"""P01: klue/roberta-base tokenizer로 측정한 모든 통화의 토큰 길이.
 
-Run:  uv run python -m scripts.token_length_stats
-Aggregate numbers only (Test text is never printed). Appends to the P01 report.
+실행: uv run python -m scripts.token_length_stats
+집계 수치만 다룬다(Test 텍스트는 절대 출력하지 않는다). P01 보고서에 추가한다.
 """
 
 from __future__ import annotations

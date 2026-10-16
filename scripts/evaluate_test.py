@@ -1,9 +1,9 @@
-"""P09 step 2: Test Unlock. Evaluate every frozen model on the official Test once.
+"""P09 2단계: Test Unlock. freeze된 모든 모델을 공식 Test에 한 번 평가한다.
 
-Run:  uv run python -m scripts.evaluate_test
-Requires experiments/freeze.json. Uses each model's Validation-chosen threshold.
-Writes experiments/p09_test_results.md and experiments/test_scores.json.
-Report only: nothing is tuned here (plan §12).
+실행:  uv run python -m scripts.evaluate_test
+experiments/freeze.json이 필요하다. 각 모델의 Validation에서 선택된 임계값을 사용한다.
+experiments/p09_test_results.md와 experiments/test_scores.json을 쓴다.
+리포트 전용: 여기서는 아무것도 튜닝하지 않는다(계획서 §12).
 """
 
 from __future__ import annotations
@@ -41,7 +41,7 @@ def roberta_scores(model_dir: Path, texts: list[str]) -> list[float]:
 
 
 def bootstrap_ci(labels: list[int], scores: list[float], threshold: float, metric: str) -> tuple[float, float]:
-    """95% percentile bootstrap interval for one metric (plan §8-A, optional)."""
+    """하나의 지표에 대한 95% 퍼센타일 부트스트랩 구간(계획서 §8-A, 선택 사항)."""
     generator = random.Random(42)
     values = []
     n = len(labels)

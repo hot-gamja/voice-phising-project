@@ -1,8 +1,8 @@
-"""Model comparison table under the §15 rule, from saved Validation score files.
+"""§15 규칙에 따른 모델 비교 표, 저장된 Validation 점수 파일로부터 생성.
 
-Run:  uv run python -m scripts.compare_models
-Reads experiments/*_val_scores.json, applies: precision at recall >= 0.90,
-tie within 2 Validation phishing calls, then F1. Writes experiments/model_comparison_val.md.
+실행:  uv run python -m scripts.compare_models
+experiments/*_val_scores.json을 읽어서, recall >= 0.90에서의 precision을 적용하고,
+2개 Validation 피싱 통화 이내면 동률 처리 후 F1으로 비교한다. experiments/model_comparison_val.md를 쓴다.
 """
 
 from __future__ import annotations
@@ -31,7 +31,7 @@ def main() -> None:
         point = metrics_at([labels[c] for c in call_ids], [saved["scores"][c] for c in call_ids], saved["decision_threshold"])
         rows.append((name, point))
 
-    # Tie tolerance: precision difference equivalent to TIE_CALLS phishing calls at this recall.
+    # 동률 허용 범위: 이 recall에서 TIE_CALLS 피싱 통화에 해당하는 precision 차이.
     predicted_positive = positives * TARGET_RECALL
     tolerance = TIE_CALLS / (predicted_positive + TIE_CALLS)
     best_precision = max(point.precision for _, point in rows)

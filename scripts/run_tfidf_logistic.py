@@ -1,8 +1,8 @@
-"""P04 B0: TF-IDF char n-gram + Logistic Regression, Train -> Validation.
+"""P04 B0: TF-IDF 문자 n-gram + Logistic 회귀, Train → Validation.
 
-Run:  uv run python -m scripts.run_tfidf_logistic
-Main comparison uses model_text (Head+Tail). A full-transcript run is
-reported once as a reference only (plan §9). Test is not touched.
+실행: uv run python -m scripts.run_tfidf_logistic
+주요 비교는 model_text(Head+Tail)를 사용한다. 전체 전사본 실행은
+참고용으로 한 번만 보고한다(계획서 §9). Test는 건드리지 않는다.
 """
 
 from __future__ import annotations
@@ -19,7 +19,7 @@ from src.data.model_text import load_model_text_split
 from src.evaluation.threshold import TARGET_RECALL, candidate_thresholds, metrics_at, pr_table, select_threshold
 
 C_CANDIDATES = [0.01, 0.1, 1, 10]
-MIN_DF = 2  # n-grams seen in only one training call are noise
+MIN_DF = 2  # 학습 데이터 통화 하나에서만 등장한 n-gram은 잡음이다
 RESULTS_PATH = Path("experiments/tfidf_logistic_val_results.md")
 SCORES_PATH = Path("experiments/tfidf_logistic_val_scores.json")
 MODEL_PATH = Path("models/tfidf_logistic.joblib")

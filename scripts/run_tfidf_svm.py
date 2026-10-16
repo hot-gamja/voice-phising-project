@@ -1,8 +1,8 @@
-"""P05 B1: TF-IDF char n-gram + LinearSVC, Train -> Validation.
+"""P05 B1: TF-IDF 문자 n-gram + LinearSVC, Train → Validation.
 
-Run:  uv run python -m scripts.run_tfidf_svm
-LinearSVC has no predict_proba; scores are decision_function margins, so the
-threshold grid is built from Validation score quantiles (plan §10). Test untouched.
+실행: uv run python -m scripts.run_tfidf_svm
+LinearSVC에는 predict_proba가 없다; 점수는 decision_function 마진이므로
+임계값 그리드는 Validation 점수 분위수로 만든다(계획서 §10). Test는 건드리지 않는다.
 """
 
 from __future__ import annotations

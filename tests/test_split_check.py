@@ -1,4 +1,4 @@
-"""Plan §8-A checks 1-5 as pass/fail tests on the real official split."""
+"""계획서 §8-A 검사 1~5를 실제 공식 split에 대한 pass/fail 테스트로 수행."""
 
 import pytest
 

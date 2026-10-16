@@ -1,4 +1,4 @@
-"""REST and WebSocket message shapes (plan §18, §19)."""
+"""REST·WebSocket 메시지 형태 정의 (계획서 §18, §19)."""
 
 from __future__ import annotations
 

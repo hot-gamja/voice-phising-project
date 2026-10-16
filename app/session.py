@@ -1,6 +1,6 @@
-"""In-memory session store for the WebSocket mock stream (plan §20).
+"""WebSocket 모의 스트림용 메모리 세션 저장소 (계획서 §20).
 
-V1 limitation: single process only. Scale-out needs an external store (Redis).
+V1 한계: 단일 프로세스 전용. 여러 프로세스로 늘리려면 외부 저장소(Redis)가 필요하다.
 """
 
 from __future__ import annotations
@@ -15,14 +15,14 @@ class Session:
     last_seq: int = 0
 
     def append(self, seq: int, text: str) -> None:
-        """Accept the next segment; reject out-of-order or repeated seq (plan §19)."""
+        """다음 구간을 받는다. 순서가 어긋나거나 중복된 seq는 거부한다 (계획서 §19)."""
         if seq <= self.last_seq:
             raise ValueError(f"seq {seq} is not after {self.last_seq}")
         self.segments.append(text)
         self.last_seq = seq
 
     def context_text(self) -> str:
-        """Accumulated transcript so far. Head+Tail is applied later by the Predictor."""
+        """지금까지 누적된 전사본. Head+Tail 절단은 이후 Predictor가 적용한다."""
         return " ".join(self.segments)
 
 

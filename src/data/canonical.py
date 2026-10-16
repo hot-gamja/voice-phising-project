@@ -1,11 +1,11 @@
-"""Canonical V2 rows: V1's {call_id, label, text} plus the dataset a call came from.
+"""V2 표준 행: V1의 {call_id, label, text}에 통화의 출처를 더한 형태.
 
-V1's data/processed/*.jsonl has no source field, so per-dataset metrics cannot be
-computed at all — fatal for a generalization study. These rows add one.
+V1의 data/processed/*.jsonl에는 출처 필드가 없어서 데이터셋별 지표를 아예
+계산할 수 없다. 일반화 연구에서는 치명적인 결함이라, 이 행들이 그 필드를 더한다.
 
-Written as a separate module on a separate output path because
-src/data/preprocess.py is sealed by experiments/freeze.json and must stay
-byte-identical; its functions are imported, never edited.
+별도 모듈·별도 출력 경로로 만든 이유: src/data/preprocess.py는
+experiments/freeze.json으로 봉인돼 바이트 단위로 유지해야 한다. 그 함수들은
+가져다 쓰기만 하고 고치지 않는다.
 """
 
 from __future__ import annotations
@@ -18,32 +18,31 @@ from src.data.preprocess import call_text_from_transcript
 
 CANONICAL_DIR = Path("data/processed/v2")
 
-# Dataset this module reads. External datasets get their own builder later.
+# 이 모듈이 읽는 데이터셋. 외부 데이터셋은 나중에 자기 빌더를 따로 갖는다.
 DATASET = "korccvi_v2"
 
-# The two upstream recording sources KorCCVi was compiled from, one per class
-# (upstream DATA.md §2.1, §2.2). No AI Hub dataSetSn is encoded: upstream names
-# the dataset「저품질 전화망 음성인식 데이터」but never states its number, and our
-# own plan marks the "#571" guess as inference from domain descriptions only.
+# KorCCVi가 합쳐온 두 원 녹음 출처. 클래스마다 하나씩이다 (상류 DATA.md §2.1, §2.2).
+# AI Hub 데이터셋 번호(dataSetSn)는 식별자에 넣지 않는다. 상류는 데이터셋 이름
+#「저품질 전화망 음성인식 데이터」만 적고 번호는 적지 않았고, 우리 계획서도 "#571"을
+# 도메인 서술 일치에 근거한 추정이라고 명시했다.
 SOURCE_FSS = "fss_voice_phishing_guard"
 SOURCE_AIHUB = "aihub_lowquality_telephony"
 
 
 def source_of(record: dict) -> str:
-    """Upstream recording source of one call, from a KorCCVi call manifest row.
+    """KorCCVi manifest 한 행에서 그 통화의 원 녹음 출처를 돌려준다.
 
-    Derived from the label on purpose. Within KorCCVi source and label are
-    perfectly correlated by construction — every vishing call is FSS and every
-    non-vishing call is AI Hub (DATA.md §4) — so this column carries no extra
-    information here. That correlation IS the confound V2 measures, and
-    recording it explicitly is what makes per-source metrics expressible once
-    a third source is added. Other datasets need their own mapping.
+    라벨에서 유도하는 것은 의도된 설계다. KorCCVi 안에서 출처와 라벨은 구성상
+    완전히 일치한다 — 피싱은 전부 FSS, 정상은 전부 AI Hub (DATA.md §4) — 그래서
+    이 컬럼은 여기서는 추가 정보를 담지 않는다. 그 일치 자체가 V2가 측정하려는
+    confound이고, 명시해 두는 덕분에 세 번째 출처가 들어오는 순간 출처별 지표를
+    표현할 수 있게 된다. 다른 데이터셋은 자기 매핑을 따로 둬야 한다.
     """
     return SOURCE_FSS if record["label"] == 1 else SOURCE_AIHUB
 
 
 def build_canonical_split(split: str) -> list[dict]:
-    """[{call_id, label, text, dataset, source}] for one KorCCVi split, manifest order."""
+    """KorCCVi split 하나의 [{call_id, label, text, dataset, source}], manifest 순서."""
     rows = []
     for record in load_call_manifest(split):
         transcript = load_transcript(record["transcript_filepath"])
@@ -58,7 +57,7 @@ def build_canonical_split(split: str) -> list[dict]:
 
 
 def write_canonical_split(split: str) -> Path:
-    """Write data/processed/v2/{split}.jsonl and return its path."""
+    """data/processed/v2/{split}.jsonl을 쓰고 그 경로를 돌려준다."""
     CANONICAL_DIR.mkdir(parents=True, exist_ok=True)
     output_path = CANONICAL_DIR / f"{split}.jsonl"
     with output_path.open("w", encoding="utf-8") as output_file:
@@ -68,6 +67,6 @@ def write_canonical_split(split: str) -> Path:
 
 
 def load_canonical_split(split: str) -> list[dict]:
-    """Read back data/processed/v2/{split}.jsonl."""
+    """data/processed/v2/{split}.jsonl을 다시 읽어 들인다."""
     with (CANONICAL_DIR / f"{split}.jsonl").open(encoding="utf-8") as canonical_file:
         return [json.loads(line) for line in canonical_file if line.strip()]

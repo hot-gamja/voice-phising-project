@@ -1,4 +1,4 @@
-"""Plan §24 REST API tests via TestClient (lifespan runs inside the `with`)."""
+"""계획서 §24 REST API 테스트, TestClient 사용 (lifespan은 `with` 안에서 실행)."""
 
 import pytest
 from fastapi.testclient import TestClient

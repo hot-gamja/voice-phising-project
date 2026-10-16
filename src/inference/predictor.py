@@ -1,8 +1,8 @@
-"""Serving-side predictor for the frozen V1 model (plan §18, §20).
+"""freeze된 V1 모델의 서빙 측 predictor (계획서 §18, §20).
 
-Applies the same Head+Tail truncation as training, then the saved TF-IDF +
-Logistic pipeline. `model_score` is the pipeline's class-1 probability before
-any calibration; it is not a real-world probability.
+학습과 똑같은 Head+Tail 절단을 적용한 뒤 저장된 TF-IDF + Logistic 파이프라인에
+넣는다. `model_score`는 보정을 거치지 않은 파이프라인의 클래스 1 확률이며,
+실제 피싱 확률이 아니다.
 """
 
 from __future__ import annotations
@@ -20,7 +20,7 @@ from src.data.truncate import truncate_head_tail
 
 MODEL_VERSION = "v1"
 DEFAULT_MODEL_PATH = Path("models/tfidf_logistic.joblib")
-# A local tokenizer directory (baked into the Docker image) avoids a network fetch at startup.
+# tokenizer를 로컬 디렉터리(Docker 이미지에 구워 넣음)에서 읽어 기동 시 네트워크 요청을 없앤다.
 DEFAULT_TOKENIZER = os.environ.get("TOKENIZER_PATH", TOKENIZER_NAME)
 LABEL_PHISHING = "PHISHING"
 LABEL_NORMAL = "NORMAL"
@@ -35,7 +35,7 @@ class Prediction:
 
 
 class Predictor:
-    """Loads the frozen pipeline once; `predict` is synchronous and thread-safe for reads."""
+    """freeze된 파이프라인을 한 번만 로드한다. `predict`는 동기 호출이고 읽기에는 스레드 안전하다."""
 
     def __init__(self, model_path: Path = DEFAULT_MODEL_PATH, tokenizer_name: str = DEFAULT_TOKENIZER):
         artifact = joblib.load(model_path)
@@ -44,7 +44,7 @@ class Predictor:
         self.tokenizer = AutoTokenizer.from_pretrained(tokenizer_name)
 
     def model_text(self, text: str) -> str:
-        """Same preprocessing path as training: whitespace cleanup + Head+Tail."""
+        """학습과 같은 전처리 경로: 공백 정리 + Head+Tail 절단."""
         return truncate_head_tail(clean_text(text), self.tokenizer)
 
     def score(self, text: str) -> float:

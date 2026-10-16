@@ -1,7 +1,7 @@
-"""Mock Transcript Producer: replay demo Validation calls over the WebSocket (plan §19).
+"""Mock Transcript Producer: 데모 Validation 통화를 WebSocket으로 재생한다(계획서 §19).
 
-Run:  uv run python -m scripts.mock_stream [--url ws://127.0.0.1:8000/ws] [--delay 0.3] [--call vishing_341]
-Sends one segment at a time and prints the running score. Requires the server to be up.
+실행:  uv run python -m scripts.mock_stream [--url ws://127.0.0.1:8000/ws] [--delay 0.3] [--call vishing_341]
+한 번에 구간 하나씩 전송하고 진행 중인 점수를 출력한다. 서버가 켜져 있어야 한다.
 """
 
 from __future__ import annotations

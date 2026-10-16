@@ -1,7 +1,7 @@
-"""P01 Dataset Audit: integrity checks + aggregate stats on the official split.
+"""P01 데이터셋 감사: 공식 split에 대한 정합성 검사 + 집계 통계.
 
-Run:  uv run python -m scripts.audit_korccvi
-Writes experiments/p01_audit_report.md. Prints call_ids only, never Test text.
+실행:  uv run python -m scripts.audit_korccvi
+experiments/p01_audit_report.md를 쓴다. call_id만 출력하며, Test 텍스트는 절대 출력하지 않는다.
 """
 
 from __future__ import annotations
@@ -34,7 +34,7 @@ LABEL_NAME = {0: "non_vishing", 1: "vishing"}
 
 
 def describe(values: list[int]) -> str:
-    """min / median / mean / max on one line."""
+    """한 줄로 min/median/mean/max 표시."""
     if not values:
         return "n=0"
     return (
@@ -47,7 +47,7 @@ def main() -> None:
     lines: list[str] = ["# P01 KorCCVi v2 Audit Report", ""]
     call_splits = load_all_call_splits()
 
-    # --- 1-4: call_id disjointness and totals ---
+    # --- 1-4: call_id 중복 없음 및 총계 ---
     lines += ["## Split integrity (plan §8-A checks 1-5)", ""]
     for pair, shared in call_id_overlaps(call_splits).items():
         lines.append(f"- call_id overlap {pair}: {len(shared)}")
@@ -55,7 +55,7 @@ def main() -> None:
         lines.append(f"- duplicate call_id within {split}: {duplicate_call_ids_within_split(records)}")
     lines.append(f"- total calls: {total_calls(call_splits)} (expected {EXPECTED_TOTAL_CALLS})")
 
-    # --- 5: segment manifest agrees with call manifest ---
+    # --- 5: segment manifest과 call manifest 일치 확인 ---
     segment_splits = {split: load_segment_manifest(split) for split in CALL_SPLITS}
     for split in CALL_SPLITS:
         mismatch = segment_call_id_mismatch(call_splits[split], segment_splits[split])
@@ -68,14 +68,14 @@ def main() -> None:
         lines.append(f"- invalid labels in {split}: {len(invalid_labels(call_splits[split]))}")
     lines.append("")
 
-    # --- Per-split, per-class counts ---
+    # --- split별, 클래스별 개수 ---
     lines += ["## Counts", "", "| split | non_vishing | vishing | total |", "|---|---:|---:|---:|"]
     for split, records in call_splits.items():
         label_counts = Counter(record["label"] for record in records)
         lines.append(f"| {split} | {label_counts[0]} | {label_counts[1]} | {len(records)} |")
     lines.append("")
 
-    # --- Transcript-level quality and length stats (aggregate only) ---
+    # --- 전사본 단위 품질 및 길이 통계 (집계만) ---
     lines += ["## Transcript quality and length (aggregate)", ""]
     call_text_by_id: dict[str, str] = {}
     empty_calls: list[tuple[str, str]] = []
@@ -120,7 +120,7 @@ def main() -> None:
             lines.append(f"- {split} {LABEL_NAME[label]}: {describe(segment_counts[split][label])}")
     lines.append("")
 
-    # --- 6: FSS source overlap (report only) ---
+    # --- 6: FSS source overlap (보고만) ---
     lines += ["## FSS source overlap (plan §8-A report 6)", ""]
     source_report = source_overlap_report(call_splits, load_fss_source_mapping())
     lines.append(f"- mapping rows: {source_report['mapping_rows']}")

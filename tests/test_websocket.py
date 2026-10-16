@@ -1,4 +1,4 @@
-"""Plan §21 WebSocket checks: session, seq order, context, empty text, two sessions."""
+"""계획서 §21 WebSocket 검사: 세션, seq 순서, context, 빈 텍스트, 두 세션."""
 
 import pytest
 from fastapi.testclient import TestClient

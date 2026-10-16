@@ -1,8 +1,8 @@
-"""Verify the V1 freeze: recompute hashes and compare them to experiments/freeze.json.
+"""V1 freeze를 검증한다: 해시를 다시 계산해 experiments/freeze.json과 비교한다.
 
-Run:  uv run python -m scripts.verify_freeze
-Read-only — never writes freeze.json. Exits non-zero if any frozen model artifact
-or frozen code file no longer matches what was recorded at freeze time.
+실행:  uv run python -m scripts.verify_freeze
+읽기 전용 — freeze.json을 절대 쓰지 않는다. freeze 시점에 기록된 것과 모델 artifact나
+코드 파일이 하나라도 일치하지 않으면 0이 아닌 코드로 종료한다.
 """
 
 from __future__ import annotations
@@ -18,9 +18,9 @@ MISSING = "MISSING"
 
 
 def verdict(path: Path, expected_hash: str) -> tuple[str, str]:
-    """Compare one frozen path against its recorded hash.
+    """하나의 freeze 대상 경로를 기록된 해시와 비교한다.
 
-    Returns (status, detail) where status is MATCH / MISMATCH / MISSING.
+    status가 MATCH / MISMATCH / MISSING 중 하나인 (status, detail)을 반환한다.
     """
     if not path.exists():
         return MISSING, f"no such path: {path}"
@@ -31,7 +31,7 @@ def verdict(path: Path, expected_hash: str) -> tuple[str, str]:
 
 
 def frozen_entries(record: dict) -> list[tuple[str, Path, str]]:
-    """Flatten freeze.json into (label, path, expected_hash) rows."""
+    """freeze.json을 (label, path, expected_hash) 행들로 펼친다."""
     entries = [(name, Path(info["path"]), info["sha256_16"])
                for name, info in record["models"].items()]
     entries += [(path, Path(path), expected_hash)

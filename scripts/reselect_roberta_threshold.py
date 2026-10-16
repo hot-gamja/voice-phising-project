@@ -1,8 +1,8 @@
-"""Re-derive the RoBERTa decision_threshold from saved Validation scores.
+"""저장된 Validation 점수로부터 RoBERTa의 decision_threshold를 다시 계산한다.
 
-Run:  uv run python -m scripts.reselect_roberta_threshold
-Used when the §11 candidate policy changes; avoids retraining. Updates the
-lr2e-05 score file, the selected-LR copy, the results md, and the model dir.
+실행:  uv run python -m scripts.reselect_roberta_threshold
+계획서 §11의 후보 정책이 바뀔 때 재학습 없이 쓴다. lr2e-05 점수 파일, 선택된 LR 복사본,
+결과 md, 모델 디렉터리를 갱신한다.
 """
 
 from __future__ import annotations

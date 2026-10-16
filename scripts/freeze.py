@@ -1,8 +1,8 @@
-"""P09 step 1: Freeze. Record exactly what will be evaluated on Test, once.
+"""P09 1단계: Freeze. Test에서 평가될 대상을 정확히 한 번 기록한다.
 
-Run:  uv run python -m scripts.freeze
-Writes experiments/freeze.json with model paths, Validation-chosen thresholds,
-file hashes, and the git commit. evaluate_test.py refuses to run without it.
+실행:  uv run python -m scripts.freeze
+모델 경로, Validation에서 선택된 임계값, 파일 해시, git 커밋을 담아 experiments/freeze.json을 쓴다.
+이 파일이 없으면 evaluate_test.py는 실행을 거부한다.
 """
 
 from __future__ import annotations

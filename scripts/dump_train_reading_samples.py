@@ -1,9 +1,9 @@
-"""P01 직접 읽기: dump Train-only call transcripts for a human to read.
+"""P01 직접 읽기: 사람이 읽을 Train 전용 통화 전사본을 추출한다.
 
-Run:  uv run python -m scripts.dump_train_reading_samples
-Writes data/reading/train_samples.md (gitignored: KorCCVi content).
-Picks, per class, 5 calls from the shortest third and 5 from the longest third
-so the reader sees both ends. Never touches Validation or Test.
+실행:  uv run python -m scripts.dump_train_reading_samples
+data/reading/train_samples.md를 쓴다 (gitignore됨: KorCCVi 콘텐츠).
+클래스별로 가장 짧은 1/3에서 5개, 가장 긴 1/3에서 5개를 골라
+양쪽 끝을 다 보게 한다. Validation과 Test는 절대 건드리지 않는다.
 """
 
 from __future__ import annotations
@@ -20,7 +20,7 @@ LABEL_NAME = {0: "정상 (non_vishing)", 1: "피싱 (vishing)"}
 
 
 def call_as_dialogue(transcript: dict) -> str:
-    """One line per segment, prefixed with the CLOVA speaker label."""
+    """구간마다 한 줄, CLOVA 화자(speaker) 라벨을 앞에 붙인다."""
     lines = []
     for segment in transcript.get("segments", []):
         speaker = segment.get("speaker", {}).get("label", "?")

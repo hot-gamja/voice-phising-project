@@ -1,9 +1,9 @@
-"""RoBERTa fine-tuning on model_text (plan §13-14). Train -> Validation only.
+"""model_text로 RoBERTa 파인튜닝 (계획서 §13-14). Train -> Validation만 쓴다.
 
-Run (smoke):  uv run python -m src.training.train_transformer --max-steps 30
-Run (full):   uv run python -m src.training.train_transformer --lr 2e-5
-Writes experiments/roberta_lr{lr}_val_results.md and roberta_val_scores.json (best LR
-is chosen later by scripts/compare_models.py). Test is never loaded here.
+실행(스모크):  uv run python -m src.training.train_transformer --max-steps 30
+실행(전체):    uv run python -m src.training.train_transformer --lr 2e-5
+experiments/roberta_lr{lr}_val_results.md와 roberta_val_scores.json을 쓴다(최적 LR은
+이후 scripts/compare_models.py가 고른다). 여기서 Test는 절대 로드하지 않는다.
 """
 
 from __future__ import annotations
@@ -37,7 +37,7 @@ def to_dataset(rows: list[dict], tokenizer) -> Dataset:
         "text": [row["model_text"] for row in rows],
         "label": [row["label"] for row in rows],
     })
-    # model_text already fits; truncation here is a safety net only.
+    # model_text는 이미 길이가 맞춰져 있다. 여기 절단은 안전망일 뿐이다.
     return dataset.map(
         lambda batch: tokenizer(batch["text"], truncation=True, max_length=MAX_LENGTH),
         batched=True, remove_columns=["text"],
@@ -45,7 +45,7 @@ def to_dataset(rows: list[dict], tokenizer) -> Dataset:
 
 
 def vishing_scores(logits: np.ndarray) -> list[float]:
-    """Softmax probability of class 1."""
+    """클래스 1의 softmax 확률."""
     probabilities = torch.softmax(torch.tensor(logits), dim=-1)[:, 1]
     return probabilities.tolist()
 
